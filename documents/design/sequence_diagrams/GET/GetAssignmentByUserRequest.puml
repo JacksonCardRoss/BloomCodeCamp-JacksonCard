@@ -1,0 +1,28 @@
+@startuml
+
+actor "User" as client
+participant "Website" as apiGateway
+participant "GETAssignmentByUserRequest" as getAssignmentByUserRequest
+participant "AssignmentDAO" as assignmentDAO
+database "DynamoDB" as dynamoDB
+
+title GETAssignmentByUserRequest
+
+client -> apiGateway : GET AssignmentByUser Request
+apiGateway -> getAssignmentByUserRequest : GET AssignmentByUser Request
+getAssignmentByUserRequest -> assignmentDAO : Get Assignment by User
+assignmentDAO -> dynamoDB : Get Assignments Request
+
+alt if user has no assignments
+dynamoDB -> assignmentDAO : return empty List<Assignment>
+assignmentDAO -> getAssignmentByUserRequest : return empty List<Assignment>
+getAssignmentByUserRequest -> apiGateway : return 204 response
+apiGateway -> client : No Assignments have been Created
+end
+
+dynamoDB -> assignmentDAO : return List<Assignment>
+assignmentDAO -> getAssignmentByUserRequest : return List<Assignment>
+getAssignmentByUserRequest -> apiGateway : return GETAssignmentByUserRequest
+apiGateway -> client : return 200 response with request data
+
+@enduml

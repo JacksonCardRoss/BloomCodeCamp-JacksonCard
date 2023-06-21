@@ -1,0 +1,28 @@
+@startuml
+
+actor "User" as client
+participant "Website" as apiGateway
+participant "GETAssignmentByIdRequest" as getAssignmentByIdRequest
+participant "AssignmentDAO" as assignmentDAO
+database "DynamoDB" as dynamoDB
+
+title GETAssignmentByIdRequest
+
+client -> apiGateway : GET AssignmentID Request
+apiGateway -> getAssignmentByIdRequest : GET AssignmentID Request
+getAssignmentByIdRequest -> assignmentDAO : Check if Assignment Exists
+assignmentDAO -> dynamoDB : Get Assignment Request
+
+alt if assignment does not exist
+dynamoDB -> assignmentDAO : return no Assignment Data
+assignmentDAO -> getAssignmentByIdRequest : return null Assignment
+getAssignmentByIdRequest -> apiGateway : return 400 response
+apiGateway -> client : 400 Response
+end
+
+dynamoDB -> assignmentDAO : return Assignment
+assignmentDAO -> getAssignmentByIdRequest : return Assignment Object
+getAssignmentByIdRequest -> apiGateway : return GETAssignmentResult request
+apiGateway -> client : return 200 response with AssignmentData
+
+@enduml

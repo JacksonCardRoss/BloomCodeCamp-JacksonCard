@@ -1,0 +1,68 @@
+@startuml
+
+class User {
+-@PrimaryKey id : Long
+-cohortStartDate: Date
+-username: String
+-password: String
+-authorities: List
+}
+
+class Authority {
+-id: Long
+-authority: String
+-user: User
+}
+
+class Assignment {
+-@PrimaryKey id : Long
+-status: String
+-number: long
+-githubUrl: String
+-branch: String
+-reviewVideoUrl: String
+-userId: long
+-codeReviewerIdNumber: long
+}
+
+class UserController{
++saveUser(User)
++getUser(long) : User
+}
+
+
+class AssignmentController {
++getAssignmentById(String) : Assignment
++getAssignmentByUser(User) : Assignment
++saveAssignment(Assignment) : Assignment
+}
+
+class UserModel {
+-userId: long
+-cohortStartDate: Date
+-username: String
+}
+
+enum AssignmentEnum {
+
+}
+
+enum AssignmentStatusEnum {
+UNFINISHED
+SUBMITTED
+UNDER_REVIEW
+REJECTED
+COMPLETED
+}
+
+enum AuthorityEnum {
+LEARNER
+REVIEWER
+ADMIN
+}
+
+class ResourceNotFoundException extends RuntimeException{
+}
+
+
+@enduml

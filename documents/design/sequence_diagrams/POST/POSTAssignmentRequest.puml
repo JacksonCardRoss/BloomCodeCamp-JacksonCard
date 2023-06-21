@@ -1,0 +1,20 @@
+@startuml
+
+actor "User" as client
+participant "Website" as apiGateway
+participant "POSTAssignmentRequest" as postAssignmentRequest
+participant "AssignmentDAO" as assignmentDAO
+database "DynamoDB" as dynamoDB
+
+title POSTAssignmentRequest
+
+client -> apiGateway : POST Assignment Request
+apiGateway -> postAssignmentRequest : POST Assignment Request
+postAssignmentRequest -> assignmentDAO : Create Assignment Object
+assignmentDAO -> dynamoDB : Add new object
+dynamoDB -> assignmentDAO : return Assignment
+assignmentDAO -> postAssignmentRequest : return Assignment
+postAssignmentRequest -> apiGateway : return POSTAssignment Request
+apiGateway -> client : return 200 response
+
+@enduml
